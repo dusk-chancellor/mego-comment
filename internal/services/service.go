@@ -8,7 +8,7 @@ import (
 type CommentService interface {
 	Find(pageSize int, pageToken string) ([]*models.Comment, string, error)
 	Create(comment models.Comment) (string, error)
-	Delete(comment models.Comment) (string, error)
+	Delete(id string) (string, error)
 	Count(postId string) (int32, error)
 }
 

@@ -2,22 +2,70 @@ package grpc
 
 import (
 	"context"
+	"log"
 
 	"github.com/antibomberman/mego-protos/gen/go/comment"
+	"github.com/dusk-chancellor/mego-comment/internal/dto"
 )
 
+const element = "comment_handlers"
+
 func (s *serverAPI) Find(ctx context.Context, in *comment.FindRequest) (*comment.FindResponse, error) {
-	return &comment.FindResponse{}, nil
+	pageSize := int(in.GetPageSize())
+	pageToken := in.GetPageToken()
+
+	comments, nextPageToken, err := s.service.Find(pageSize, pageToken)
+	if err != nil {
+		log.Printf("Element %s | Failed to find: %v", element, err)
+		return nil, err
+	}
+	pbComments := dto.ToPbComments(comments)
+
+	return &comment.FindResponse{
+		Comments:      pbComments,
+		NextPageToken: nextPageToken,
+	}, nil
 }
 
 func (s *serverAPI) Create(ctx context.Context, in *comment.CreateRequest) (*comment.CreateResponse, error) {
-	return &comment.CreateResponse{}, nil
+	inComment := in.GetComment()
+	modelComment := dto.ToModelComment(inComment)
+
+	id, err := s.service.Create(modelComment)
+	if err != nil {
+		log.Printf("Element %s | Failed to create: %v", element, err)
+		return nil, err
+	}
+
+	return &comment.CreateResponse{
+		Id: id,
+	}, nil
 }
 
 func (s *serverAPI) Delete(ctx context.Context, in *comment.DeleteRequest) (*comment.DeleteResponse, error) {
-	return &comment.DeleteResponse{}, nil
+	id := in.GetId()
+
+	id, err := s.service.Delete(id)
+	if err != nil {
+		log.Printf("Element %s | Failed to delete: %v", element, err)
+		return nil, err
+	}
+
+	return &comment.DeleteResponse{
+		Id: id,
+	}, nil
 }
 
 func (s *serverAPI) Count(ctx context.Context, in *comment.CountRequest) (*comment.CountResponse, error) {
-	return &comment.CountResponse{}, nil
+	postId := in.GetPostId()
+
+	count, err := s.service.Count(postId)
+	if err != nil {
+		log.Printf("Element %s | Failed to count: %v", element, err)
+		return nil, err
+	}
+
+	return &comment.CountResponse{
+		Count: count,
+	}, nil
 }
