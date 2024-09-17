@@ -24,8 +24,6 @@ func main() {
 	}
 	defer db.Close()
 
-	log.Println("Connected to redis")
-
 	commentRepo := repositories.NewCommentRepository(db)
 	commentService := services.NewCommentService(commentRepo)
 
