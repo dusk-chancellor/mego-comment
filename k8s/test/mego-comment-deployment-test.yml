@@ -16,7 +16,7 @@ spec:
       imagePullSecrets:
       - name: regcred
       containers:
-      - image: registry.gitlab.com/mego.tours/backend/comment/main:latest
+      - image: registry.gitlab.com/mego.tours/backend/mego-comment/main:latest
         name: comment
         imagePullPolicy: Always
         ports:
@@ -31,9 +31,10 @@ metadata:
   name: comment-service
   namespace: comment
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: comment
   ports:
-    - port: 80
+    - nodePort: 30028
+      port: 80
       targetPort: 80
