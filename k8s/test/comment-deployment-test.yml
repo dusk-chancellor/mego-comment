@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comment
+  namespace: comment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comment
+  template:
+    metadata:
+      labels:
+        app: comment
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - image: registry.gitlab.com/mego.tours/backend/comment/main:latest
+        name: comment
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+
+---
+
+kind: Service 
+apiVersion: v1 
+metadata:
+  name: comment-service
+  namespace: comment
+spec:
+  type: ClusterIP
+  selector:
+    app: comment
+  ports:
+    - port: 80
+      targetPort: 80
