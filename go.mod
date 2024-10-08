@@ -2,7 +2,7 @@ module github.com/dusk-chancellor/mego-comment
 
 go 1.22.5
 
-require github.com/antibomberman/mego-protos v0.0.99
+require github.com/antibomberman/mego-protos v0.1.20
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect

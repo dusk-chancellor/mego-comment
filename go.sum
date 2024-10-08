@@ -4,6 +4,8 @@ github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak
 github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/antibomberman/mego-protos v0.0.99 h1:U4MBXNw8196xdulVpawYI/hzf6OCsNjlId4PnBf9wek=
 github.com/antibomberman/mego-protos v0.0.99/go.mod h1:8Wuhfgs4AcrZCq8zSGhQ31zs268iGxFTBxx8IL3Zreg=
+github.com/antibomberman/mego-protos v0.1.20 h1:ldqV6FBitASU/akSygKDjA5DP2YP/P4LNoDgqRMXIbQ=
+github.com/antibomberman/mego-protos v0.1.20/go.mod h1:8Wuhfgs4AcrZCq8zSGhQ31zs268iGxFTBxx8IL3Zreg=
 github.com/go-sql-driver/mysql v1.8.1 h1:LedoTUt/eveggdHS9qUFC1EFSa8bU2+1pZjSRpvNJ1Y=
 github.com/go-sql-driver/mysql v1.8.1/go.mod h1:wEBSXgmK//2ZFJyE+qWnIsVGmvmEKlqwuVSjsCm7DZg=
 github.com/golang/protobuf v1.5.4 h1:i7eJL8qZTpSEXOPTxNKhASYpMn+8e5Q6AdndVa1dWek=

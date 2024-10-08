@@ -1,29 +1,48 @@
-version: '3.9'
+version: "3.9"
 services:
   postgres:
     image: postgres:14.8-alpine3.18
-    container_name: mego_like_db
+    container_name: mego_db
     environment:
-      - POSTGRES_DB: "${DB_NAME}"
-      - POSTGRES_USER: "${DB_USER}"
-      - POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_DB: "mego"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
     volumes:
       - ./tmp/postgres:/var/lib/postgresql/data
     ports:
-      - "${DB_OUTER_PORT}:${DB_PORT}"
+      - "5432:5432"
     networks:
-      - mego_network
-  mego_comment:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: mego-comment
-    depends_on:
-      - postgres
+     - mego_network
+  redis:
+    container_name: mego_redis
+    image: redis:6.2.6-alpine
     ports:
-      - "${COMMENT_SERVICE_PORT}:${COMMENT_SERVICE_PORT}"
+      - "6379:6379"
+    volumes:
+      - ./tmp/redis:/data
     networks:
       - mego_network
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ACCESS_KEY: "mego_access_key"
+      MINIO_SECRET_KEY: "mego_secret_key"
+
+    volumes:
+      - ./tmp/minio:/data
+    command: [ "server", "/data","--console-address", ":9001" ]
+    networks:
+      - mego_network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 20s
+      timeout: 20s
+      retries: 3
 
 networks:
   mego_network:

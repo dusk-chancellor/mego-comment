@@ -13,7 +13,6 @@ func ToPbComments(comments []*models.Comment) (pbComments []*comment.Comment) {
 			Content:   modelComment.Content,
 			PostId:    modelComment.PostId,
 			ParentId:  modelComment.ParentId,
-			CommentId: modelComment.CommentId,
 			Author: &comment.Author{
 				Id:         modelComment.Author.Id,
 				FirstName:  modelComment.Author.FirstName,
@@ -36,7 +35,6 @@ func ToModelComment(pbComment *comment.Comment) models.Comment {
 		Content:   pbComment.Content,
 		PostId:    pbComment.PostId,
 		ParentId:  pbComment.ParentId,
-		CommentId: pbComment.CommentId,
 		Author: models.Author{
 			Id:         pbComment.Author.Id,
 			FirstName:  pbComment.Author.FirstName,
@@ -44,6 +42,23 @@ func ToModelComment(pbComment *comment.Comment) models.Comment {
 			LastName:   pbComment.Author.LastName,
 			Email:      pbComment.Author.Email,
 			Avatar:     pbComment.Author.Avatar,
+		},
+	}
+}
+
+func ToPbComment(modelComment *models.Comment) *comment.Comment {
+	return &comment.Comment{
+		Id:        modelComment.Id,
+		Content:   modelComment.Content,
+		PostId:    modelComment.PostId,
+		ParentId:  modelComment.ParentId,
+		Author: &comment.Author{
+			Id:         modelComment.Author.Id,
+			FirstName:  modelComment.Author.FirstName,
+			MiddleName: modelComment.Author.MiddleName,
+			LastName:   modelComment.Author.LastName,
+			Email:      modelComment.Author.Email,
+			Avatar:     modelComment.Author.Avatar,
 		},
 	}
 }

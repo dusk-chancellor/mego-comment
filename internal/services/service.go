@@ -7,9 +7,11 @@ import (
 
 type CommentService interface {
 	Find(pageSize int, pageToken string) ([]*models.Comment, string, error)
-	Create(comment models.Comment) (string, error)
-	Delete(id string) (string, error)
-	Count(postId string) (int32, error)
+	Create(comment models.Comment) (int64, error)
+	Delete(id int64) (int64, error)
+	Count(postId int64) (int32, error)
+	GetById(id int64) (*models.Comment, error)
+	Exists(id int64) (bool, error)
 }
 
 type commentService struct {

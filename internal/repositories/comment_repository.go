@@ -37,39 +37,39 @@ func (r *commentRepository)	Find(startIndex, pageSize int) ([]*models.Comment, e
 }
 	
 	
-func (r *commentRepository)	Create(comment models.Comment) (string, error) {
+func (r *commentRepository)	Create(comment models.Comment) (int64, error) {
 	q := `
-		INSERT INTO comments (id, content, post_id, parent_id, comment_id, author_id)
+		INSERT INTO comments (id, content, post_id, parent_id, author_id)
 		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		RETURNING id;
 	`
-	var id string
+	var id int64
 	if err := r.db.QueryRow(
-		q, comment.Id, comment.Content, comment.PostId, comment.ParentId, comment.CommentId, comment.AuthorId,
+		q, comment.Id, comment.Content, comment.PostId, comment.ParentId, comment.AuthorId,
 		).Scan(&id); err != nil {
 		log.Printf("Element: %s | Failed to create comment: %v", element, err)
-		return "", err
+		return 0, err
 	}
 	return id, nil
 }
 	
 	
-func (r *commentRepository)	Delete(inID string) (string, error) {
+func (r *commentRepository)	Delete(inID int64) (int64, error) {
 	q := `
 		DELETE FROM comments
 		WHERE id = $1
 		RETURNING id;
 	`
-	var outID string
+	var outID int64
 	if err := r.db.QueryRow(q, inID).Scan(&outID); err != nil {
 		log.Printf("Element: %s | Failed to delete comment: %v", element, err)
-		return "", err
+		return 0, err
 	}
 	return outID, nil
 }
 	
 	
-func (r *commentRepository)	Count(postId string) (int32, error) {
+func (r *commentRepository)	Count(postId int64) (int32, error) {
 	q := `SELECT COUNT(*) FROM comments WHERE post_id = $1;`
 
 	var count int32
@@ -78,4 +78,26 @@ func (r *commentRepository)	Count(postId string) (int32, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (r *commentRepository)	GetById(id int64) (*models.Comment, error) {
+	q := `SELECT * FROM comments WHERE id = $1;`
+
+	var comment models.Comment
+	if err := r.db.Get(&comment, q, id); err != nil {
+		log.Printf("Element: %s | Failed to get by id: %v", element, err)
+		return nil, err
+	}
+	return &comment, nil
+}
+
+func (r *commentRepository)	Exists(id int64) (bool, error) {
+	q := `SELECT EXISTS(SELECT 1 FROM comments WHERE id = $1);`
+
+	var exists bool
+	if err := r.db.Get(&exists, q, id); err != nil {
+		log.Printf("Element: %s | Failed to exists: %v", element, err)
+		return false, err
+	}
+	return exists, nil
 }

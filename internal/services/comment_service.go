@@ -38,29 +38,47 @@ func (s *commentService) Find(pageSize int, pageToken string) ([]*models.Comment
 	return comments, nextPageToken, nil
 }
 
-func (s *commentService) Create(comment models.Comment) (string, error) {
+func (s *commentService) Create(comment models.Comment) (int64, error) {
 	id, err := s.commentRepo.Create(comment)
 	if err != nil {
 		log.Printf("Element: %s | Failed to create comment: %v", element, err)
-		return "", err
+		return 0, err
 	}
 	return id, nil
 }
 
-func (s *commentService) Delete(id string) (string, error) {
+func (s *commentService) Delete(id int64) (int64, error) {
 	id, err := s.commentRepo.Delete(id)
 	if err != nil {
 		log.Printf("Element: %s | Failed to delete comment: %v", element, err)
-		return "", err
+		return 0, err
 	}
 	return id, nil
 }
 
-func (s *commentService) Count(postId string) (int32, error) {
+func (s *commentService) Count(postId int64) (int32, error) {
 	count, err := s.commentRepo.Count(postId)
 	if err != nil {
 		log.Printf("Element: %s | Failed to count comments: %v", element, err)
 		return 0, err
 	}
 	return count, nil
+}
+
+func (s *commentService) GetById(id int64) (*models.Comment, error) {
+	comment, err := s.commentRepo.GetById(id)
+	if err != nil {
+		log.Printf("Element: %s | Failed to get by id: %v", element, err)
+		return nil, err
+	}
+	return comment, nil
+}
+
+func (s *commentService) Exists(id int64) (bool, error) {
+	exists, err := s.commentRepo.Exists(id)
+	if err != nil {
+		log.Printf("Element: %s | Failed to exists: %v", element, err)
+		return false, err
+	}
+	return exists, nil
 }

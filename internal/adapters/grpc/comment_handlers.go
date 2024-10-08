@@ -69,3 +69,30 @@ func (s *serverAPI) Count(ctx context.Context, in *comment.CountRequest) (*comme
 		Count: count,
 	}, nil
 }
+
+func (s *serverAPI) GetById(ctx context.Context, in *comment.GetByIdRequest) (*comment.Comment, error) {
+	id := in.GetId()
+
+	comment, err := s.service.GetById(id)
+	if err != nil {
+		log.Printf("Element %s | Failed to get by id: %v", element, err)
+		return nil, err
+	}
+	pbComment := dto.ToPbComment(comment)
+
+	return pbComment, nil
+}
+
+func (s *serverAPI) Exists(ctx context.Context, in *comment.GetByIdRequest) (*comment.ExistsResponse, error) {
+	id := in.GetId()
+
+	exists, err := s.service.Exists(id)	
+	if err != nil {
+		log.Printf("Element %s | Failed to exists: %v", element, err)
+		return nil, err
+	}
+
+	return &comment.ExistsResponse{
+		Exists: exists,
+	}, nil
+}
